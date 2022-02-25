@@ -7,7 +7,11 @@
  * @note Some compilers use an optimization called copy elision which can bypass copy and move constructors/assigments.
  * In order to explicitly invoke copy and move constructors/assignments use the -fno-elide-constructors compiler flag
  */
- 
+ #include <iostream>
+#include <string>
+#include <memory>
+#include <vector>
+
 class A {
  
  public:
@@ -122,7 +126,10 @@ class B{
    void
    foo()
    {
-     d_A->print();
+     if(d_A != nullptr)
+       d_A->print();
+     else
+       std::cout << "Attention! Accessing a null ptr." << std::endl;
    }
 
   private:
@@ -148,4 +155,16 @@ int main()
     B b5(0);
     b5 = B(6,3);
     b5.foo();
+    
+    B b6 = std::move(b1);
+    b6.foo();
+    
+    b1.foo();
+    
+    B b7(0);
+    b7 = std::move(b2);
+    b7.foo();
+    
+    b2.foo();
 }
+
